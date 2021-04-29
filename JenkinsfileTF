@@ -12,7 +12,7 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
         CLASS           = "GitSCM"
         BRANCH          = "main"
-        GIT_CREDENTIALS = "git-hubsshkey"
+        GIT_CREDENTIALS = "US-Virginia"
         GIT_URL         = "git@github.com:dontesii/DevDip.git"
     }
 
