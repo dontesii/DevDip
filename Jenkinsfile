@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        imagename = "jekanik/projectfordiplom"
+        imagename = "admon/projectdiplom"
         registryCredential = 'git'
         dockerImage = ''
         CLASS           = "GitSCM"
