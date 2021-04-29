@@ -7,7 +7,7 @@ pipeline {
         CLASS           = "GitSCM"
         BRANCH          = "main"
         GIT_CREDENTIALS = "git-hubsshkey"
-        GIT_URL         = "git@github.com:dontesii/DevDip.git"
+        GIT_URL         = "git@github.com:dontesii/ProdDip.git"
     }
     stages {
         stage('Proj') {
@@ -29,9 +29,9 @@ pipeline {
         }
        stage("Prepare build image") {
             steps {
-                sh "docker build -f Dockerfile . -t admon/projectfordiplom:${BUILD_ID}"
+                sh "docker build -f Dockerfile . -t admon/projectdiplom:${BUILD_ID}"
                 sh "docker login -u jekanik -p${password}"
-                sh "docker push admon/projectfordiplom:${BUILD_ID}"
+                sh "docker push admon/projectdiplom:${BUILD_ID}"
             }
         }      
        stage("Ansible") {
