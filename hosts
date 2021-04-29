@@ -1,0 +1,5 @@
+[qa]
+Ubuntu ansible_ssh_host=52.54.109.41
+
+[qa:vars]
+ansible_ssh_user=ubuntu
