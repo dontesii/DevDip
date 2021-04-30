@@ -30,7 +30,7 @@ pipeline {
        stage("Prepare build image") {
             steps {
                 sh "docker build -f Dockerfile . -t admon/projectdiplom:${BUILD_ID}"
-                sh "docker login -u jekanik -p${password}"
+                sh "docker login -u dontesi -p${password}"
                 sh "docker push admon/projectdiplom:${BUILD_ID}"
             }
         }      
