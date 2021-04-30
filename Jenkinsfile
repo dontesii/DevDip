@@ -6,7 +6,7 @@ pipeline {
         dockerImage = ''
         CLASS           = "GitSCM"
         BRANCH          = "main"
-        GIT_CREDENTIALS = "git-hubsshkey"
+        GIT_CREDENTIALS = "github-ssh-key"
         GIT_URL         = "git@github.com:dontesii/ProdDip.git"
     }
     stages {
