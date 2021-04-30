@@ -4,7 +4,7 @@
   vars:
     create_containers: 1
     default_container_name: test
-    default_container_image: admon/projectdiplom:latest
+    default_container_image: dontesii/projectdiplom:latest
     default_container_command: sleep 30m
 
   tasks:
@@ -32,17 +32,22 @@
       pip:
         name: docker
 
-    - name: Pull default Docker image
-      docker_image:
-        name: joomla
-        source: pull
-
-    - name: Create default containers
+   - name:  Start container
       docker_container:
         name: myapp
-        image: joomla
+        image: dontesii/projectdiplom:{{ lookup('env','BUILD_NUMBER') }}
+        state: started
+        pull: true
+        recreate: yes
+        hostname: "{{ ansible_hostname }}"
+        restart_policy: "always"
         ports:
           - "80:80"
-        command: sleep 30m
-        state: present
-      with_sequence: count=1
+    - name: Stop a container
+      docker_container:
+        name: myapp
+        state: stopped
+    - name: Start a container
+      docker_container:
+        name: myapp
+        state: started
