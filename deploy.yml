@@ -32,7 +32,7 @@
       pip:
         name: docker
 
-   - name:  Start container
+    - name:  Start container
       docker_container:
         name: myapp
         image: dontesii/projectdiplom:{{ lookup('env','BUILD_NUMBER') }}
