@@ -1,5 +1,5 @@
 [qa]
-Ubuntu ansible_ssh_host=3.94.106.199 
+Ubuntu ansible_ssh_host=100.24.54.233 
 
 [qa:vars]
 ansible_ssh_user=ubuntu
