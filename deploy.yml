@@ -4,7 +4,7 @@
   vars:
     create_containers: 1
     default_container_name: test
-    default_container_image: dontesii/projectdiplom:latest
+    default_container_image: dontesi/projectdiplom:latest
     default_container_command: sleep 30m
 
   tasks:
@@ -35,7 +35,7 @@
     - name:  Start container
       docker_container:
         name: myapp
-        image: dontesii/projectdiplom:{{ lookup('env','BUILD_NUMBER') }}
+        image: dontesi/projectdiplom:{{ lookup('env','BUILD_NUMBER') }}
         state: started
         pull: true
         recreate: yes
