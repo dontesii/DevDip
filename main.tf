@@ -2,6 +2,7 @@ provider "aws" {
   region = "us-west-1"
 }
 
+#--------------------------------------------------
 resource "aws_security_group" "alb-sec-group" {
   name = "alb-sec-group"
   description = "Security Group for the ELB (ALB)"
@@ -25,6 +26,7 @@ resource "aws_security_group" "alb-sec-group" {
   }
 }
 
+#--------------------------------------------------
 resource "aws_security_group" "asg_sec_group" {
   name = "asg_sec_group"
   description = "Security Group for the ASG"
@@ -61,8 +63,7 @@ resource "aws_launch_configuration" "ec2_template" {
             systemctl enable httpd
             EOF
   security_groups = [aws_security_group.asg_sec_group.id]
-  // If the launch_configuration is modified:
-  // --> Create New resources before destroying the old resources
+
   lifecycle {
     create_before_destroy = true
   }
@@ -78,8 +79,8 @@ data "aws_subnet_ids" "default" {
 
 
 
+#--------------------------------------------------
 // Create the ASG
-// https://www.terraform.io/docs/providers/aws/r/autoscaling_group.html
 
 resource "aws_autoscaling_group" "Practice_ASG" {
   max_size = 2
@@ -105,7 +106,17 @@ resource "aws_autoscaling_group" "Practice_ASG" {
   create_before_destroy = true
   }
 }
+#--------------------------------------------------
+data "aws_ami" "latest_ubuntu" {
+  owners      = ["099720109477"]
+  most_recent = true
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+  }
+}
 
+#--------------------------------------------------
 resource "aws_lb" "ELB" {
   name               = "terraform-asg-example"
   load_balancer_type = "application"
@@ -150,6 +161,8 @@ resource "aws_lb_target_group" "asg" {
     unhealthy_threshold = 2
   }
 }
+
+
 
 // https://www.terraform.io/docs/providers/aws/r/lb_listener_rule.html
 resource "aws_lb_listener_rule" "asg" {
