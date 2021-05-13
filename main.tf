@@ -82,8 +82,8 @@ data "aws_subnet_ids" "default" {
 // https://www.terraform.io/docs/providers/aws/r/autoscaling_group.html
 
 resource "aws_autoscaling_group" "Practice_ASG" {
-  max_size = 5
-  min_size = 2
+  max_size = 2
+  min_size = 1
   launch_configuration = aws_launch_configuration.ec2_template.name
   health_check_grace_period = 300 // Time after instance comes into service before checking health.
 
