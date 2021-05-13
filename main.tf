@@ -1,12 +1,8 @@
 provider "aws" {
-  region = var.region
+  region = "us-west-1"
 }
 #-----------------------------------------
 
-variable "region" {
-  type = string
-  default = "us-west-1"
-}
 
 variable "image_id" {
   type = string
@@ -18,10 +14,7 @@ variable "flavor" {
   default = "t2.micro"
 }
 
-variable "ec2_instance_port" {
-  type = number
-  default = 80
-}
+
 #-----------------------------------------
 resource "aws_security_group" "alb-sec-group" {
   name = "alb-sec-group"
@@ -136,7 +129,7 @@ resource "aws_lb_listener" "http" {
 #-----------------------------------------
 resource "aws_lb_target_group" "asg" {
   name = "asg-example"
-  port = var.ec2_instance_port
+  port = 80
   protocol = "HTTP"
   vpc_id = data.aws_vpc.default.id
 
