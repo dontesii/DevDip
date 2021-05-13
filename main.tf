@@ -166,14 +166,7 @@ resource "aws_lb_listener_rule" "asg" {
     }
   }
 #--------------------------------------------------
-data "aws_ami" "latest_ubuntu" {
-  owners      = ["099720109477"]
-  most_recent = true
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
-  }
-}
+
 #--------------------------------------------------------------
 resource "aws_security_group" "warG" {
   name = "Dynamic Security Group"
