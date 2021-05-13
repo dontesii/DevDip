@@ -2,6 +2,7 @@ provider "aws" {
   region = var.region
 }
 
+#--------------------------------------------------
 resource "aws_security_group" "alb-sec-group" {
   name = "alb-sec-group"
   description = "Security Group for the ELB (ALB)"
@@ -25,6 +26,7 @@ resource "aws_security_group" "alb-sec-group" {
   }
 }
 
+#--------------------------------------------------
 resource "aws_security_group" "asg_sec_group" {
   name = "asg_sec_group"
   description = "Security Group for the ASG"
@@ -47,8 +49,8 @@ resource "aws_security_group" "asg_sec_group" {
   }
 }
 
+#--------------------------------------------------
 // Create the Launch configuration so that the ASG can use it to launch EC2 instances
-// https://www.terraform.io/docs/providers/aws/r/launch_configuration.html
 resource "aws_launch_configuration" "ec2_template" {
   image_id = var.image_id
   instance_type = var.flavor
@@ -78,22 +80,18 @@ data "aws_subnet_ids" "default" {
 
 
 
+#--------------------------------------------------
 // Create the ASG
-// https://www.terraform.io/docs/providers/aws/r/autoscaling_group.html
-
-resource "aws_autoscaling_group" "Practice_ASG" {
+ resource "aws_autoscaling_group" "Practice_ASG" {
   max_size = 5
   min_size = 2
   launch_configuration = aws_launch_configuration.ec2_template.name
   health_check_grace_period = 300 // Time after instance comes into service before checking health.
 
   health_check_type = "ELB" // ELB or Ec2 (Default):
-  // EC2 --> Minimal health check - consider the vm unhealthy if the Hypervisor says the vm is completely down
-  // ELB --> Instructs the ASG to use the "target's group" health check
-
+ 
   vpc_zone_identifier = data.aws_subnet_ids.default.ids // A list of subnet IDs to launch resources in.
-  // We specified all the subnets in the default vpc
-
+ 
   target_group_arns = [aws_lb_target_group.asg.arn]
 
   tag {
@@ -133,6 +131,7 @@ resource "aws_lb_listener" "http" {
   }
 }
 
+#--------------------------------------------------
 // create a target group for your ASG
 
 resource "aws_lb_target_group" "asg" {
@@ -166,7 +165,82 @@ resource "aws_lb_listener_rule" "asg" {
       values = ["*"]
     }
   }
+#--------------------------------------------------
+data "aws_ami" "latest_ubuntu" {
+  owners      = ["099720109477"]
+  most_recent = true
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+  }
+}
+#--------------------------------------------------------------
+resource "aws_security_group" "warG" {
+  name = "Dynamic Security Group"
 
+  dynamic "ingress" {
+    for_each = ["80", "443", "22", "8080"]
+    content {
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name  = "Dynamic SecurityGroup"
+    Owner = "Admon"
+  }
+}
+#----------------------------------------
+#--------------------------------------------------------------
+
+resource "aws_launch_template" "web" {
+  name = "web"
+  image_id      = "ami-09e67e426f25ce0d7"
+  instance_type = "t3.micro"
+  key_name = "hw41"
+  user_data = filebase64("${path.module}/user_data.sh")
+  disable_api_termination = true
+  ebs_optimized = true
+    cpu_options {
+    core_count       = 1
+    threads_per_core = 2
+  }
+  credit_specification {
+    cpu_credits = "standard"
+  }
+  block_device_mappings {
+    device_name = "/dev/sda1"
+    ebs {
+      volume_size = 10
+    }
+  }
+  placement {
+    availability_zone = "us-east-1"
+  }
+  instance_initiated_shutdown_behavior = "terminate"
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 1
+  }
+  vpc_security_group_ids = [aws_security_group.warbG.id]
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = {
+      Name = "MyWarServer"
+    }
+  }
+}
 
 
 
