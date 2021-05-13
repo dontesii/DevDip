@@ -1,8 +1,28 @@
 provider "aws" {
-  region = "us-west-1"
+  region = var.region
+}
+#-----------------------------------------
+
+variable "region" {
+  type = string
+  default = "us-west-1"
 }
 
-#--------------------------------------------------
+variable "image_id" {
+  type = string
+  default = "ami-04e59c05167ea7bd5"
+}
+
+variable "flavor" {
+  type = string
+  default = "t2.micro"
+}
+
+variable "ec2_instance_port" {
+  type = number
+  default = 80
+}
+#-----------------------------------------
 resource "aws_security_group" "alb-sec-group" {
   name = "alb-sec-group"
   description = "Security Group for the ELB (ALB)"
@@ -25,8 +45,7 @@ resource "aws_security_group" "alb-sec-group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
-#--------------------------------------------------
+#-----------------------------------------
 resource "aws_security_group" "asg_sec_group" {
   name = "asg_sec_group"
   description = "Security Group for the ASG"
@@ -49,25 +68,6 @@ resource "aws_security_group" "asg_sec_group" {
   }
 }
 
-// Create the Launch configuration so that the ASG can use it to launch EC2 instances
-// https://www.terraform.io/docs/providers/aws/r/launch_configuration.html
-resource "aws_launch_configuration" "ec2_template" {
-  image_id = "ami-04e59c05167ea7bd5"
-  instance_type = "t2.micro"
-  user_data = <<-EOF
-            #!/bin/bash
-            yum -y update
-            yum -y install httpd
-            echo "Website is Working !" > /var/www/html/index.html
-            systemctl start httpd
-            systemctl enable httpd
-            EOF
-  security_groups = [aws_security_group.asg_sec_group.id]
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
 
 data "aws_vpc" "default" {
   default = true
@@ -78,13 +78,11 @@ data "aws_subnet_ids" "default" {
 }
 
 
-
-#--------------------------------------------------
+#-----------------------------------------
 // Create the ASG
-
 resource "aws_autoscaling_group" "Practice_ASG" {
-  max_size = 2
-  min_size = 1
+  max_size = 3
+  min_size = 2
   launch_configuration = aws_launch_configuration.ec2_template.name
   health_check_grace_period = 300 // Time after instance comes into service before checking health.
 
@@ -106,17 +104,8 @@ resource "aws_autoscaling_group" "Practice_ASG" {
   create_before_destroy = true
   }
 }
-#--------------------------------------------------
-data "aws_ami" "latest_ubuntu" {
-  owners      = ["099720109477"]
-  most_recent = true
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
-  }
-}
-
-#--------------------------------------------------
+#-----------------------------------------
+// https://www.terraform.io/docs/providers/aws/r/lb.html
 resource "aws_lb" "ELB" {
   name               = "terraform-asg-example"
   load_balancer_type = "application"
@@ -125,7 +114,7 @@ resource "aws_lb" "ELB" {
   subnets  = data.aws_subnet_ids.default.ids
   security_groups = [aws_security_group.alb-sec-group.id]
 }
-
+#-----------------------------------------
 // https://www.terraform.io/docs/providers/aws/r/lb_listener.html
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.ELB.arn // Amazon Resource Name (ARN) of the load balancer
@@ -144,10 +133,10 @@ resource "aws_lb_listener" "http" {
 }
 
 // create a target group for your ASG
-
+#-----------------------------------------
 resource "aws_lb_target_group" "asg" {
   name = "asg-example"
-  port = 80
+  port = var.ec2_instance_port
   protocol = "HTTP"
   vpc_id = data.aws_vpc.default.id
 
@@ -161,9 +150,57 @@ resource "aws_lb_target_group" "asg" {
     unhealthy_threshold = 2
   }
 }
+#--------------------------------------------------
+data "aws_ami" "latest_ubuntu" {
+  owners      = ["099720109477"]
+  most_recent = true
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+  }
+}
+#----------------------------------------
+resource "aws_launch_template" "web" {
+  name = "web"
+  image_id      = "ami-09e67e426f25ce0d7"
+  instance_type = "t2.micro"
+  key_name = "keyAWS"
+  user_data = filebase64("${path.module}/user_data.sh")
+  disable_api_termination = true
+  ebs_optimized = true
+    cpu_options {
+    core_count       = 1
+    threads_per_core = 2
+  }
 
+  credit_specification {
+    cpu_credits = "standard"
+  }
+  block_device_mappings {
+    device_name = "/dev/sda1"
+    ebs {
+      volume_size = 10
+    }
+  }
+  placement {
+    availability_zone = "us-east-1"
+  }
+  instance_initiated_shutdown_behavior = "terminate"
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 1
+  }
+  vpc_security_group_ids = [aws_security_group.launch-wizard-5]
+  tag_specifications {
+    resource_type = "instance"
 
-
+    tags = {
+      Name = "MyWebServer"
+    }
+  }
+}
+#-----------------------------------------
 // https://www.terraform.io/docs/providers/aws/r/lb_listener_rule.html
 resource "aws_lb_listener_rule" "asg" {
   listener_arn = aws_lb_listener.http.arn
@@ -179,3 +216,7 @@ resource "aws_lb_listener_rule" "asg" {
     }
   }
 }
+
+
+
+
