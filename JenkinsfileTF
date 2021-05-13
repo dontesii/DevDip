@@ -1,8 +1,7 @@
 pipeline {
 
     parameters {
-        string(name: 'environment', defaultValue: 'terraform', description: 'Workspace/environment file to use for deployment')
-        booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
+               booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
 
     }
 
@@ -12,7 +11,7 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
         CLASS           = "GitSCM"
         BRANCH          = "main"
-        GIT_CREDENTIALS = "github-ssh-key"
+        GIT_CREDENTIALS = "git-hubsshkey"
         GIT_URL         = "git@github.com:dontesii/DevDip.git"
     }
 
@@ -21,7 +20,6 @@ pipeline {
         tools {
         "org.jenkinsci.plugins.terraform.TerraformInstallation" "terraform10210"
               }
-   
     stages {
           stage('Checkout SCM') {
             steps {
@@ -37,18 +35,15 @@ pipeline {
         }
         stage('Init') {
             steps {
-                sh 'terraform init -input=true'
+                sh 'terraform init -input=false'
                   }
         }
-        stage('Create workspace') {
-            steps {
-               // sh 'terraform init -input=false'
-               // sh 'terraform workspace new ${environment}'
-                sh 'pwd; terraform workspace select ${environment}'
-            }
-        }
+
         stage('Plan') {
             steps {
+                //sh 'terraform init -input=false'
+                //sh 'terraform workspace new ${environment}'
+                //sh 'pwd; terraform workspace select ${environment}'
                 sh "pwd; terraform plan -input=false -out tfplan"
                 sh "pwd; terraform show -no-color tfplan > tfplan.txt"
             }
@@ -69,14 +64,15 @@ pipeline {
            }
        }
 
-        stage('Apply') {
+        stage('Apply/destroy') {
             steps {
                 sh "pwd; terraform apply -input=false tfplan"
+                //sh "pwd; terraform destroy -auto-approve"
             }
         }
         stage('S3Copy step') {
            steps {
-               s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'dips33dev', excludedFile: 'Jenkinsfile', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: false, noUploadOnFailure: false, selectedRegion: 'us-east-1', showDirectlyInBrowser: false, sourceFile: '*/', storageClass: 'STANDARD', uploadFromSlave: true, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'Jenkins', userMetadata: [] 
+               s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'my.bucket.for.upload.jenkins47', excludedFile: 'Jenkinsfile', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: false, noUploadOnFailure: false, selectedRegion: 'us-east-1', showDirectlyInBrowser: false, sourceFile: '*/', storageClass: 'STANDARD', uploadFromSlave: true, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'Jenkins', userMetadata: [] 
       }
     }
    }
