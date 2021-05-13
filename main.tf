@@ -1,5 +1,5 @@
 provider "aws" {
-  region = var.region
+  region = "us-west-1"
 }
 
 resource "aws_security_group" "alb-sec-group" {
@@ -50,8 +50,8 @@ resource "aws_security_group" "asg_sec_group" {
 // Create the Launch configuration so that the ASG can use it to launch EC2 instances
 // https://www.terraform.io/docs/providers/aws/r/launch_configuration.html
 resource "aws_launch_configuration" "ec2_template" {
-  image_id = var.image_id
-  instance_type = var.flavor
+  image_id = "ami-04e59c05167ea7bd5"
+  instance_type = "t2.micro"
   user_data = <<-EOF
             #!/bin/bash
             yum -y update
@@ -106,7 +106,6 @@ resource "aws_autoscaling_group" "Practice_ASG" {
   }
 }
 
-// https://www.terraform.io/docs/providers/aws/r/lb.html
 resource "aws_lb" "ELB" {
   name               = "terraform-asg-example"
   load_balancer_type = "application"
@@ -137,7 +136,7 @@ resource "aws_lb_listener" "http" {
 
 resource "aws_lb_target_group" "asg" {
   name = "asg-example"
-  port = var.ec2_instance_port
+  port = 80
   protocol = "HTTP"
   vpc_id = data.aws_vpc.default.id
 
