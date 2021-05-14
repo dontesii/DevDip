@@ -25,7 +25,11 @@ resource "aws_security_group" "alb-sec-group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
+variable "app_subnets" { 
+    type = list(string) 
+    description = "App subnets id" 
+    default = ["subnet-5b00923d", "subnet-9d7954d0"]
+} 
 #--------------------------------------------------
 resource "aws_security_group" "asg_sec_group" {
   name = "asg_sec_group"
@@ -147,7 +151,7 @@ resource "aws_lb_target_group" "asg" {
   name = "asg-example"
   port = var.ec2_instance_port
   protocol = "HTTP"
-  vpc_id = data.aws_vpc.default.id
+  vpc_id = "vpc-aa7ed0d7"
 
   health_check {
     path = "/"
