@@ -94,7 +94,7 @@ resource "aws_security_group" "asg_sec_group" {
     id      = aws_launch_template.web.id
     version = aws_launch_template.web.latest_version
   }
-  target_group_arns    = [aws_lb_target_group.webtg.arn]
+
   dynamic "tag" {
     for_each = {
       Name   = "WebServer"
