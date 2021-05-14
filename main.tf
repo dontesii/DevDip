@@ -64,7 +64,7 @@ data "aws_subnet_ids" "default" {
 #--------------------------------------------------
 // Create the ASG
  resource "aws_autoscaling_group" "Practice_ASG" {
-  max_size = 5
+  max_size = 3
   min_size = 2
   launch_configuration = aws_launch_configuration.ec2_template.name
   health_check_grace_period = 300 // Time after instance comes into service before checking health.
@@ -179,8 +179,8 @@ resource "aws_security_group" "warG" {
 resource "aws_launch_template" "web" {
   name = "web"
   image_id      = "ami-09e67e426f25ce0d7"
-  instance_type = "t3.micro"
-  key_name = "hw41"
+  instance_type = "t2.micro"
+  key_name = "ubuntu"
   user_data = filebase64("${path.module}/user_data.sh")
   disable_api_termination = true
   ebs_optimized = true
