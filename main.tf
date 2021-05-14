@@ -49,7 +49,24 @@ resource "aws_security_group" "asg_sec_group" {
   }
 }
 
-
+resource "aws_launch_configuration" "ec2_template" {
+  image_id = var.image_id
+  instance_type = var.flavor
+  user_data = <<-EOF
+            #!/bin/bash
+            yum -y update
+            yum -y install httpd
+            echo "Website is Working !" > /var/www/html/index.html
+            systemctl start httpd
+            systemctl enable httpd
+            EOF
+  security_groups = [aws_security_group.asg_sec_group.id]
+  // If the launch_configuration is modified:
+  // --> Create New resources before destroying the old resources
+  lifecycle {
+    create_before_destroy = true
+  }
+}
 
 data "aws_vpc" "default" {
   default = true
