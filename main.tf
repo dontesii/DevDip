@@ -31,6 +31,8 @@ variable "app_subnets" {
     default = ["subnet-5b00923d", "subnet-9d7954d0"]
 } 
 #--------------------------------------------------
+data "aws_availability_zones" "available" {}
+#--------------------------------------------------
 resource "aws_security_group" "asg_sec_group" {
   name = "asg_sec_group"
   description = "Security Group for the ASG"
@@ -116,7 +118,7 @@ resource "aws_security_group" "asg_sec_group" {
     create_before_destroy = true
   }
 }
-data "aws_availability_zones" "available" {}
+
 
 // https://www.terraform.io/docs/providers/aws/r/lb.html
 resource "aws_lb" "ELB" {
