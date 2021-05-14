@@ -28,7 +28,7 @@ resource "aws_security_group" "alb-sec-group" {
 variable "app_subnets" { 
     type = list(string) 
     description = "App subnets id" 
-    default = ["subnet-5b00923d", "subnet-9d7954d0"]
+    default = ["subnet-fbb415ca", "subnet-9d7954d0"]
 } 
 #--------------------------------------------------
 data "aws_availability_zones" "available" {}
@@ -92,7 +92,7 @@ resource "aws_security_group" "asg_sec_group" {
 }
 
 
-#https://www.terraform.io/docs/providers/aws/r/lb.html
+
 resource "aws_lb" "ELB" {
   name               = "terraform-asg-example"
   load_balancer_type = "application"
