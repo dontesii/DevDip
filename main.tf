@@ -55,7 +55,7 @@ resource "aws_security_group" "asg_sec_group" {
 #   user_data = <<-EOF
 #             #!/bin/bash
 #             yum -y update
-#             yum -y install httpd
+#             yum -y install nginx
 #             echo "Website is Working !" > /var/www/html/index.html
 #             systemctl start httpd
 #             systemctl enable httpd
@@ -94,13 +94,22 @@ resource "aws_security_group" "asg_sec_group" {
     id      = aws_launch_template.web.id
     version = aws_launch_template.web.latest_version
   }
-  tag {
-    key = "name"
-    propagate_at_launch = false
-    value = "Practice_ASG"
+  target_group_arns    = [aws_lb_target_group.webtg.arn]
+  dynamic "tag" {
+    for_each = {
+      Name   = "WebServer"
+      Owner  = "Admon"
+      TAGKEY = "TAGVALUE"
+    }
+    content {
+      key                 = tag.key
+      value               = tag.value
+      propagate_at_launch = true
+    }
   }
+  depends_on = [aws_lb.weblb]
   lifecycle {
-  create_before_destroy = true
+    create_before_destroy = true
   }
 }
 
