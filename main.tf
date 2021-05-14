@@ -91,15 +91,18 @@ resource "aws_security_group" "asg_sec_group" {
   }
 }
 
-
+#--------------------------------------------------
 
 resource "aws_lb" "ELB" {
   name               = "terraform-asg-example"
   load_balancer_type = "application"
-  subnets  = var.app_subnets
-  security_groups = [aws_security_group.alb-sec-group.id]
+  internal           = false
+  subnets            = [aws_default_subnet.default_az1.id, aws_default_subnet.default_az2.id]
+  #var.app_subnets
+  security_groups    = [aws_security_group.alb-sec-group.id]
+  
 }
-
+#--------------------------------------------------
 # https://www.terraform.io/docs/providers/aws/r/lb_listener.html
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.ELB.arn // Amazon Resource Name (ARN) of the load balancer
@@ -136,10 +139,11 @@ resource "aws_lb_target_group" "asg" {
     unhealthy_threshold = 2
   }
 }
-#--------------------------------------
+#--------------------------------------------------
 resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
 }
+#--------------------------------------------------
 # https://www.terraform.io/docs/providers/aws/r/lb_listener_rule.html
 resource "aws_lb_listener_rule" "asg" {
   listener_arn = aws_lb_listener.http.arn
@@ -156,8 +160,6 @@ resource "aws_lb_listener_rule" "asg" {
   }
 }
 #--------------------------------------------------
-
-#--------------------------------------------------------------
 resource "aws_security_group" "warG" {
   name = "Dynamic Security Group"
 
@@ -182,9 +184,7 @@ resource "aws_security_group" "warG" {
     Owner = "Admon"
   }
 }
-#----------------------------------------
-#--------------------------------------------------------------
-
+#--------------------------------------------------
 resource "aws_launch_template" "web" {
   name = "web"
   image_id      = "ami-09e67e426f25ce0d7"
@@ -225,7 +225,7 @@ resource "aws_launch_template" "web" {
     
   }
 }
-
+#--------------------------------------------------
 resource "aws_default_subnet" "default_az1" {
   availability_zone = data.aws_availability_zones.available.names[0]
 }
