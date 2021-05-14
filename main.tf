@@ -129,15 +129,15 @@ resource "aws_lb_target_group" "asg" {
   target_type = "instance"
   vpc_id   = "vpc-aa7ed0d7"
 
-  health_check {
-    path = "/"
-    protocol = "HTTP"
-    matcher = "200"
-    interval = 15
-    timeout = 3
-    healthy_threshold = 2
-    unhealthy_threshold = 2
-  }
+#   health_check {
+#     path = "/"
+#     protocol = "HTTP"
+#     matcher = "200"
+#     interval = 15
+#     timeout = 3
+#     healthy_threshold = 2
+#     unhealthy_threshold = 2
+#   }
 }
 #--------------------------------------------------
 resource "aws_vpc" "main" {
