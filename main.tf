@@ -87,14 +87,14 @@ resource "aws_security_group" "asg_sec_group" {
 # launch_configuration = aws_launch_configuration.ec2_template.name
   health_check_grace_period = 300 // Time after instance comes into service before checking health.
   health_check_type = "ELB" // ELB or Ec2 (Default):
-  vpc_zone_identifier = data.aws_subnet_ids.default.ids // A list of subnet IDs to launch resources in.
+  
   target_group_arns = [aws_lb_target_group.asg.arn]
    
   launch_template {
     id      = aws_launch_template.web.id
     version = aws_launch_template.web.latest_version
   }
-
+   vpc_zone_identifier = data.aws_subnet_ids.default.ids // A list of subnet IDs to launch resources in.
   dynamic "tag" {
     for_each = {
       Name   = "WebServer"
