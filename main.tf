@@ -96,8 +96,6 @@ resource "aws_security_group" "asg_sec_group" {
 resource "aws_lb" "ELB" {
   name               = "terraform-asg-example"
   load_balancer_type = "application"
-
-  # Use all the subnets in your default VPC (Each subnet == different AZ)
   subnets  = var.app_subnets
   security_groups = [aws_security_group.alb-sec-group.id]
 }
@@ -108,7 +106,6 @@ resource "aws_lb_listener" "http" {
   port = 80
   protocol = "HTTP"
 
-  // By default, return a simple 404 page
   default_action {
   type = "fixed-response"
     fixed_response {
