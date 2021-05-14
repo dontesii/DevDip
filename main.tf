@@ -84,7 +84,7 @@ resource "aws_security_group" "asg_sec_group" {
 
 
 #--------------------------------------------------
-// Create the ASG
+# Create the ASG
  resource "aws_autoscaling_group" "Practice_ASG" {
   name                 = "ASG-${aws_launch_template.web.name}"
   max_size = 3
@@ -113,26 +113,26 @@ resource "aws_security_group" "asg_sec_group" {
       propagate_at_launch = true
     }
   }
-  depends_on = [aws_lb.weblb]
+  depends_on = [aws_lb.ELB]
   lifecycle {
     create_before_destroy = true
   }
 }
 
 
-// https://www.terraform.io/docs/providers/aws/r/lb.html
+#https://www.terraform.io/docs/providers/aws/r/lb.html
 resource "aws_lb" "ELB" {
   name               = "terraform-asg-example"
   load_balancer_type = "application"
 
-  // Use all the subnets in your default VPC (Each subnet == different AZ)
+  # Use all the subnets in your default VPC (Each subnet == different AZ)
   subnets  = var.app_subnets
   security_groups = [aws_security_group.alb-sec-group.id]
 }
 
-// https://www.terraform.io/docs/providers/aws/r/lb_listener.html
+# https://www.terraform.io/docs/providers/aws/r/lb_listener.html
 resource "aws_lb_listener" "http" {
-  load_balancer_arn = aws_lb.weblb.arn // Amazon Resource Name (ARN) of the load balancer
+  load_balancer_arn = aws_lb.ELB.arn // Amazon Resource Name (ARN) of the load balancer
   port = 80
   protocol = "HTTP"
 
@@ -149,7 +149,7 @@ resource "aws_lb_listener" "http" {
 }
 
 #--------------------------------------------------
-// create a target group for your ASG
+# create a target group for your ASG
 
 resource "aws_lb_target_group" "asg" {
   name = "asg-example"
@@ -168,7 +168,7 @@ resource "aws_lb_target_group" "asg" {
   }
 }
 
-// https://www.terraform.io/docs/providers/aws/r/lb_listener_rule.html
+# https://www.terraform.io/docs/providers/aws/r/lb_listener_rule.html
 resource "aws_lb_listener_rule" "asg" {
   listener_arn = aws_lb_listener.http.arn
   priority = 100
@@ -218,12 +218,7 @@ resource "aws_launch_template" "web" {
   image_id      = "ami-09e67e426f25ce0d7"
   instance_type = "t2.micro"
   key_name = "123"
-  user_data = <<-EOF
-            #!/bin/bash
-            yum -y update
-            yum -y install nginx
-            systemctl restart nginx
-            EOF
+
   disable_api_termination = true
   ebs_optimized = true
     cpu_options {
@@ -255,6 +250,7 @@ resource "aws_launch_template" "web" {
     tags = {
       Name = "MyWarServer"
     }
+    
   }
 }
 
