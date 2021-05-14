@@ -155,7 +155,8 @@ resource "aws_lb_target_group" "asg" {
   name = "asg-example"
   port = var.ec2_instance_port
   protocol = "HTTP"
-  vpc_id = "vpc-aa7ed0d7"
+  target_type = "instance"
+  vpc_id   = "vpc-a067c6dd"
 
   health_check {
     path = "/"
@@ -167,7 +168,10 @@ resource "aws_lb_target_group" "asg" {
     unhealthy_threshold = 2
   }
 }
-
+#--------------------------------------
+resource "aws_vpc" "main" {
+  cidr_block = "10.0.0.0/16"
+}
 # https://www.terraform.io/docs/providers/aws/r/lb_listener_rule.html
 resource "aws_lb_listener_rule" "asg" {
   listener_arn = aws_lb_listener.http.arn
