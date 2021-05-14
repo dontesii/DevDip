@@ -198,7 +198,7 @@ resource "aws_launch_template" "web" {
   name = "web"
   image_id      = "ami-09e67e426f25ce0d7"
   instance_type = "t2.micro"
-  key_name = "US-Virginia"
+  key_name = "ubuntu"
   user_data = filebase64("${path.module}/user_data.sh")
   disable_api_termination = true
   ebs_optimized = true
