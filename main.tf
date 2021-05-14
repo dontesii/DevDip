@@ -143,7 +143,7 @@ resource "aws_lb_listener" "http" {
       content_type = "text/plain"
       message_body = "404: page not found"
       status_code  = 404
-      target_group_arn = aws_lb_target_group.webtg.arn
+      
     }
   }
 }
