@@ -123,7 +123,7 @@ resource "aws_lb" "ELB" {
   load_balancer_type = "application"
 
   // Use all the subnets in your default VPC (Each subnet == different AZ)
-  subnets  = data.aws_subnet_ids.default.ids
+  subnets  = var.app_subnets
   security_groups = [aws_security_group.alb-sec-group.id]
 }
 
