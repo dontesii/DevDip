@@ -55,34 +55,6 @@ resource "aws_security_group" "asg_sec_group" {
   }
 }
 
-# resource "aws_launch_configuration" "ec2_template" {
-#   image_id = var.image_id
-#   instance_type = var.flavor
-#   user_data = <<-EOF
-#             #!/bin/bash
-#             yum -y update
-#             yum -y install nginx
-#             echo "Website is Working !" > /var/www/html/index.html
-#             systemctl start httpd
-#             systemctl enable httpd
-#             EOF
-#   security_groups = [aws_security_group.asg_sec_group.id]
-
-#   lifecycle {
-#     create_before_destroy = true
-#   }
-# }
-
-# data "aws_vpc" "default" {
-#   default = true
-# }
-
-# data "aws_subnet_ids" "default" {
-#   vpc_id = data.aws_vpc.default.id
-# }
-
-
-
 #--------------------------------------------------
 # Create the ASG
  resource "aws_autoscaling_group" "Practice_ASG" {
@@ -150,13 +122,12 @@ resource "aws_lb_listener" "http" {
 
 #--------------------------------------------------
 # create a target group for your ASG
-
 resource "aws_lb_target_group" "asg" {
   name = "asg-example"
   port = var.ec2_instance_port
   protocol = "HTTP"
   target_type = "instance"
-  vpc_id   = "vpc-a067c6dd"
+  vpc_id   = " vpc-aa7ed0d7"
 
   health_check {
     path = "/"
