@@ -132,17 +132,14 @@ resource "aws_lb" "ELB" {
 
 // https://www.terraform.io/docs/providers/aws/r/lb_listener.html
 resource "aws_lb_listener" "http" {
-  load_balancer_arn = aws_lb.ELB.arn // Amazon Resource Name (ARN) of the load balancer
+  load_balancer_arn = aws_lb.weblb.arn // Amazon Resource Name (ARN) of the load balancer
   port = 80
   protocol = "HTTP"
 
   // By default, return a simple 404 page
   default_action {
-    type = "fixed-response"
-    fixed_response {
-      content_type = "text/plain"
-      message_body = "404: page not found"
-      status_code  = 404
+ type             = "forward"
+    target_group_arn = aws_lb_target_group.webtg.arn
     }
   }
 }
