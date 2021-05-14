@@ -49,49 +49,51 @@ resource "aws_security_group" "asg_sec_group" {
   }
 }
 
-resource "aws_launch_configuration" "ec2_template" {
-  image_id = var.image_id
-  instance_type = var.flavor
-  user_data = <<-EOF
-            #!/bin/bash
-            yum -y update
-            yum -y install httpd
-            echo "Website is Working !" > /var/www/html/index.html
-            systemctl start httpd
-            systemctl enable httpd
-            EOF
-  security_groups = [aws_security_group.asg_sec_group.id]
-  // If the launch_configuration is modified:
-  // --> Create New resources before destroying the old resources
-  lifecycle {
-    create_before_destroy = true
-  }
-}
+# resource "aws_launch_configuration" "ec2_template" {
+#   image_id = var.image_id
+#   instance_type = var.flavor
+#   user_data = <<-EOF
+#             #!/bin/bash
+#             yum -y update
+#             yum -y install httpd
+#             echo "Website is Working !" > /var/www/html/index.html
+#             systemctl start httpd
+#             systemctl enable httpd
+#             EOF
+#   security_groups = [aws_security_group.asg_sec_group.id]
 
-data "aws_vpc" "default" {
-  default = true
-}
+#   lifecycle {
+#     create_before_destroy = true
+#   }
+# }
 
-data "aws_subnet_ids" "default" {
-  vpc_id = data.aws_vpc.default.id
-}
+# data "aws_vpc" "default" {
+#   default = true
+# }
+
+# data "aws_subnet_ids" "default" {
+#   vpc_id = data.aws_vpc.default.id
+# }
 
 
 
 #--------------------------------------------------
 // Create the ASG
  resource "aws_autoscaling_group" "Practice_ASG" {
+  name                 = "ASG-${aws_launch_template.web.name}"
   max_size = 3
   min_size = 2
-  launch_configuration = aws_launch_configuration.ec2_template.name
+  min_elb_capacity     = 2
+# launch_configuration = aws_launch_configuration.ec2_template.name
   health_check_grace_period = 300 // Time after instance comes into service before checking health.
-
   health_check_type = "ELB" // ELB or Ec2 (Default):
- 
   vpc_zone_identifier = data.aws_subnet_ids.default.ids // A list of subnet IDs to launch resources in.
- 
   target_group_arns = [aws_lb_target_group.asg.arn]
-
+   
+  launch_template {
+    id      = aws_launch_template.web.id
+    version = aws_launch_template.web.latest_version
+  }
   tag {
     key = "name"
     propagate_at_launch = false
@@ -199,7 +201,12 @@ resource "aws_launch_template" "web" {
   image_id      = "ami-09e67e426f25ce0d7"
   instance_type = "t2.micro"
   key_name = "123"
- //user_data = filebase64("${path.module}/user_data.sh")
+  user_data = <<-EOF
+            #!/bin/bash
+            yum -y update
+            yum -y install nginx
+            systemctl restart nginx
+            EOF
   disable_api_termination = true
   ebs_optimized = true
     cpu_options {
