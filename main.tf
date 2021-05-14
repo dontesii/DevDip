@@ -116,6 +116,7 @@ resource "aws_security_group" "asg_sec_group" {
     create_before_destroy = true
   }
 }
+data "aws_availability_zones" "available" {}
 
 // https://www.terraform.io/docs/providers/aws/r/lb.html
 resource "aws_lb" "ELB" {
