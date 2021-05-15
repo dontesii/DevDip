@@ -195,8 +195,8 @@ resource "aws_launch_template" "web" {
 #   user_data = filebase64("${path.module}/user_data.sh")
   user_data = <<-EOF
             #!/bin/bash
-            yum -y update
-            yum -y install nginx
+            apt-get -y update
+            apt-get -y install nginx
             systemctl restart nginx
             EOF
 
