@@ -60,7 +60,7 @@ resource "aws_security_group" "asg_sec_group" {
 #--------------------------------------------------
 # Create the ASG
  resource "aws_autoscaling_group" "Practice_ASG" {
-  name                 = "ASG-${aws_launch_template.web.name}"
+  name     = "ASG-${aws_launch_template.web.name}"
   max_size = 3
   min_size = 2
   min_elb_capacity     = 2
@@ -190,7 +190,7 @@ resource "aws_security_group" "warG" {
 resource "aws_launch_template" "web" {
   name = "web"
   image_id      = "ami-09e67e426f25ce0d7"
-  instance_type = "t2.micro"
+  instance_type = "t3.micro"
   key_name = "keyAWS"
 
   disable_api_termination = true
