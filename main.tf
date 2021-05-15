@@ -145,6 +145,8 @@ resource "aws_vpc" "main" {
 #--------------------------------------------------
 resource "aws_lb_listener_rule" "asg" {
   listener_arn = aws_lb_listener.http.arn
+  port              = "80"
+  protocol          = "HTTP"
   priority = 100
 
   action {
