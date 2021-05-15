@@ -5,7 +5,7 @@ variable "region" {
 
 variable "image_id" {
   type = string
-  default = "ami-04e59c05167ea7bd5"
+  default = "ami-09e67e426f25ce0d7"
 }
 
 variable "flavor" {
