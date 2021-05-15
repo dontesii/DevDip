@@ -5,7 +5,7 @@ provider "aws" {
 variable "app_subnets" { 
     type = list(string) 
     description = "App subnets id" 
-    default = ["subnet-fbb415ca", "subnet-55891174"]
+    default = ["subnet-5b00923d", "subnet-9d7954d0"]
 } 
 #--------------------------------------------------
 resource "aws_security_group" "alb-sec-group" {
