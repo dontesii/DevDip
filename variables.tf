@@ -8,11 +8,6 @@ variable "image_id" {
   default = "ami-09e67e426f25ce0d7"
 }
 
-variable "flavor" {
-  type = string
-  default = "t2.micro"
-}
-
 variable "ec2_instance_port" {
   type = number
   default = 80
