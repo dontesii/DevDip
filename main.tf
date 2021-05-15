@@ -61,11 +61,11 @@ resource "aws_security_group" "asg_sec_group" {
 # Create the ASG
  resource "aws_autoscaling_group" "Practice_ASG" {
   name     = "ASG-${aws_launch_template.web.name}"
-  max_size             = 2
-  min_size             = 1
+  max_size             = 3
+  min_size             = 2
   min_elb_capacity     = 2
 # launch_configuration = aws_launch_configuration.ec2_template.name
-  health_check_grace_period = 300 // Time after instance comes into service before checking health.
+  health_check_grace_period = 500 // Time after instance comes into service before checking health.
   health_check_type = "ELB" // ELB or Ec2 (Default):
   vpc_zone_identifier  = [aws_default_subnet.default_az1.id, aws_default_subnet.default_az2.id]
   target_group_arns = [aws_lb_target_group.asg.arn]
@@ -146,7 +146,6 @@ resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
 }
 #--------------------------------------------------
-# https://www.terraform.io/docs/providers/aws/r/lb_listener_rule.html
 resource "aws_lb_listener_rule" "asg" {
   listener_arn = aws_lb_listener.http.arn
   priority = 100
