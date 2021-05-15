@@ -193,12 +193,7 @@ resource "aws_launch_template" "web" {
   instance_type = "t3.micro"
   key_name = "keyAWS"
 #   user_data = filebase64("${path.module}/user_data.sh")
-  user_data = <<-EOF
-            #!/bin/bash
-            apt-get -y update
-            apt-get -y install nginx
-            systemctl restart nginx
-            EOF
+  user_data = file("userdata.sh")
 
 
   disable_api_termination = true
@@ -206,6 +201,7 @@ resource "aws_launch_template" "web" {
     cpu_options {
     core_count       = 1
     threads_per_core = 2
+  
   }
 
   credit_specification {
