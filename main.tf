@@ -108,8 +108,13 @@ resource "aws_lb_listener" "http" {
   port = 80
   protocol = "HTTP"
   default_action {
-    type = "forward"
-     }
+    type = "fixed-response"
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "404: page not found"
+      status_code  = 404
+    }
+  }
 }
 #--------------------------------------------------
 resource "aws_vpc" "main" {
