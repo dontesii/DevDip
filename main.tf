@@ -117,10 +117,6 @@ resource "aws_lb_listener" "http" {
   }
 }
 #--------------------------------------------------
-resource "aws_vpc" "main" {
-  cidr_block = "10.0.0.0/16"
-}
-#--------------------------------------------------
 resource "aws_lb_listener_rule" "asg" {
   listener_arn = aws_lb_listener.http.arn
   priority = 100
