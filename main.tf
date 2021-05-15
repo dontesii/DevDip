@@ -59,13 +59,13 @@ resource "aws_security_group" "asg_sec_group" {
 #--------------------------------------------------
 # Create the ASG
  resource "aws_autoscaling_group" "Practice_ASG" {
-  name                 = "ASG-${aws_launch_template.web.name}"
-  max_size             = 3
-  min_size             = 2
-  min_elb_capacity     = 2
+  name                      = "ASG-${aws_launch_template.web.name}"
+  max_size                  = 3
+  min_size                  = 2
+  min_elb_capacity          = 2
   health_check_grace_period = 300 
-  health_check_type = "ELB" 
-  vpc_zone_identifier  = [aws_default_subnet.default_az1.id, aws_default_subnet.default_az2.id]  
+  health_check_type         = "ELB" 
+  vpc_zone_identifier       = [aws_default_subnet.default_az1.id, aws_default_subnet.default_az2.id]  
   launch_template {
     id      = aws_launch_template.web.id
     version = aws_launch_template.web.latest_version
@@ -134,39 +134,14 @@ resource "aws_lb_listener_rule" "asg" {
   }
 }
 #--------------------------------------------------
-resource "aws_security_group" "warG" {
-  name = "Dynamic Security Group"
-
-  dynamic "ingress" {
-    for_each = ["80", "443", "22", "8080"]
-    content {
-      from_port   = ingress.value
-      to_port     = ingress.value
-      protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name  = "Dynamic SecurityGroup"
-    Owner = "Admon"
-  }
-}
-#--------------------------------------------------
 resource "aws_launch_template" "web" {
-  name = "web"
+  name          = "web"
   image_id      = "ami-09e67e426f25ce0d7"
   instance_type = "t3.micro"
-  key_name = "keyAWS"
-  user_data = filebase64("${path.module}/install_nginx.sh")
+  key_name      = "keyAWS"
+  user_data     = filebase64("${path.module}/install_nginx.sh")
   disable_api_termination = true
-  ebs_optimized = true
+  ebs_optimized         = true
     cpu_options {
     core_count       = 1
     threads_per_core = 2  
@@ -189,7 +164,7 @@ resource "aws_launch_template" "web" {
     http_tokens                 = "required"
     http_put_response_hop_limit = 1
   }
-  vpc_security_group_ids = [aws_security_group.warG.id]
+  vpc_security_group_ids = [aws_security_group.alb-sec-group.id]
   tag_specifications {
     resource_type = "instance"
 
