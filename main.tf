@@ -1,7 +1,6 @@
 provider "aws" {
   region = var.region
 }
-
 #--------------------------------------------------
 variable "app_subnets" { 
     type = list(string) 
@@ -31,7 +30,6 @@ resource "aws_security_group" "alb-sec-group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
 #--------------------------------------------------
 data "aws_availability_zones" "available" {}
 #--------------------------------------------------
@@ -56,7 +54,6 @@ resource "aws_security_group" "asg_sec_group" {
     security_groups = [aws_security_group.alb-sec-group.id] // Allow Inbound traffic from the ALB Sec-Group
   }
 }
-
 #--------------------------------------------------
 # Create the ASG
  resource "aws_autoscaling_group" "Practice_ASG" {
@@ -89,17 +86,13 @@ resource "aws_security_group" "asg_sec_group" {
     create_before_destroy = true
   }
 }
-
 #--------------------------------------------------
-
 resource "aws_lb" "ELB" {
   name               = "terraform-asg-example"
   load_balancer_type = "application"
   internal           = false
   subnets            = var.app_subnets
-  #var.app_subnets
   security_groups    = [aws_security_group.alb-sec-group.id]
-  
 }
 #--------------------------------------------------
 resource "aws_lb_target_group" "asg" {
@@ -169,16 +162,12 @@ resource "aws_launch_template" "web" {
   instance_type = "t3.micro"
   key_name = "keyAWS"
   user_data = filebase64("${path.module}/install_nginx.sh")
-
-
   disable_api_termination = true
   ebs_optimized = true
     cpu_options {
     core_count       = 1
-    threads_per_core = 2
-  
+    threads_per_core = 2  
   }
-
   credit_specification {
     cpu_credits = "standard"
   }
@@ -211,16 +200,6 @@ resource "aws_launch_template" "web" {
 resource "aws_default_subnet" "default_az1" {
   availability_zone = data.aws_availability_zones.available.names[0]
 }
-
 resource "aws_default_subnet" "default_az2" {
   availability_zone = data.aws_availability_zones.available.names[1]
 }
-
-
-
-
-
-
-
-
-
