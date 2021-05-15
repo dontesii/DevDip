@@ -192,7 +192,7 @@ resource "aws_launch_template" "web" {
   image_id      = "ami-09e67e426f25ce0d7"
   instance_type = "t3.micro"
   key_name = "keyAWS"
-  user_data = "${file("install_nginx.sh")}"
+  user_data = filebase64("${path.module}/install_nginx.sh")
 
 
   disable_api_termination = true
