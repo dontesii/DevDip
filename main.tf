@@ -3,6 +3,12 @@ provider "aws" {
 }
 
 #--------------------------------------------------
+variable "app_subnets" { 
+    type = list(string) 
+    description = "App subnets id" 
+    default = ["subnet-fbb415ca", "subnet-9d7954d0"]
+} 
+#--------------------------------------------------
 resource "aws_security_group" "alb-sec-group" {
   name = "alb-sec-group"
   description = "Security Group for the ELB (ALB)"
@@ -25,11 +31,7 @@ resource "aws_security_group" "alb-sec-group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-variable "app_subnets" { 
-    type = list(string) 
-    description = "App subnets id" 
-    default = ["subnet-fbb415ca", "subnet-9d7954d0"]
-} 
+
 #--------------------------------------------------
 data "aws_availability_zones" "available" {}
 #--------------------------------------------------
