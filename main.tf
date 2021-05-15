@@ -191,7 +191,7 @@ resource "aws_launch_template" "web" {
   name = "web"
   image_id      = "ami-09e67e426f25ce0d7"
   instance_type = "t2.micro"
-  key_name = "123"
+  key_name = "keyAWS"
 
   disable_api_termination = true
   ebs_optimized = true
