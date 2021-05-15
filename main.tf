@@ -194,8 +194,9 @@ resource "aws_launch_template" "web" {
   key_name = "keyAWS"
 #   user_data = filebase64("${path.module}/user_data.sh")
   user_data = <<-EOF
-            sudo apt-get -y update
-            sudo apt-get -y install nginx
+            #!/bin/bash
+            yum -y update
+            yum -y install nginx
             systemctl restart nginx
             EOF
 
