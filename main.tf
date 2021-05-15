@@ -102,41 +102,23 @@ resource "aws_lb" "ELB" {
   
 }
 #--------------------------------------------------
-# https://www.terraform.io/docs/providers/aws/r/lb_listener.html
-resource "aws_lb_listener" "http" {
-  load_balancer_arn = aws_lb.ELB.arn // Amazon Resource Name (ARN) of the load balancer
-  port = 80
-  protocol = "HTTP"
-
-  default_action {
-  type = "fixed-response"
-    fixed_response {
-      content_type = "text/plain"
-      message_body = "404: page not found"
-      status_code  = 404
-      
-    }
-  }
-}
-
-#--------------------------------------------------
-# create a target group for your ASG
 resource "aws_lb_target_group" "asg" {
   name = "asg-example"
   port = var.ec2_instance_port
   protocol = "HTTP"
   target_type = "instance"
   vpc_id   = "vpc-aa7ed0d7"
+}
+#--------------------------------------------------
+resource "aws_lb_listener" "http" {
+  load_balancer_arn = aws_lb.ELB.arn 
+  port = 80
+  protocol = "HTTP"
 
-#   health_check {
-#     path = "/"
-#     protocol = "HTTP"
-#     matcher = "200"
-#     interval = 15
-#     timeout = 3
-#     healthy_threshold = 2
-#     unhealthy_threshold = 2
-#   }
+  default_action {
+  type = "forward"
+   
+  }
 }
 #--------------------------------------------------
 resource "aws_vpc" "main" {
@@ -145,8 +127,6 @@ resource "aws_vpc" "main" {
 #--------------------------------------------------
 resource "aws_lb_listener_rule" "asg" {
   listener_arn = aws_lb_listener.http.arn
-  port              = "80"
-  protocol          = "HTTP"
   priority = 100
 
   action {
