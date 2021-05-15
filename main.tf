@@ -97,7 +97,7 @@ resource "aws_lb" "ELB" {
   name               = "terraform-asg-example"
   load_balancer_type = "application"
   internal           = false
-  subnets            = [aws_default_subnet.default_az1.id, aws_default_subnet.default_az2.id]
+  subnets            = var.app_subnets
   #var.app_subnets
   security_groups    = [aws_security_group.alb-sec-group.id]
   
