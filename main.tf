@@ -60,20 +60,18 @@ resource "aws_security_group" "asg_sec_group" {
 #--------------------------------------------------
 # Create the ASG
  resource "aws_autoscaling_group" "Practice_ASG" {
-  name     = "ASG-${aws_launch_template.web.name}"
+  name                 = "ASG-${aws_launch_template.web.name}"
   max_size             = 2
   min_size             = 2
   min_elb_capacity     = 2
   health_check_grace_period = 500 
   health_check_type = "ELB" 
-  vpc_zone_identifier  = [aws_default_subnet.default_az1.id, aws_default_subnet.default_az2.id]
-  target_group_arns = [aws_lb_target_group.asg.arn]
-   
+  vpc_zone_identifier  = [aws_default_subnet.default_az1.id, aws_default_subnet.default_az2.id]  
   launch_template {
     id      = aws_launch_template.web.id
     version = aws_launch_template.web.latest_version
   }
-   
+  target_group_arns = [aws_lb_target_group.asg.arn]
   dynamic "tag" {
     for_each = {
       Name   = "WebServer"
