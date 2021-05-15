@@ -62,7 +62,7 @@ resource "aws_security_group" "asg_sec_group" {
  resource "aws_autoscaling_group" "Practice_ASG" {
   name     = "ASG-${aws_launch_template.web.name}"
   max_size             = 3
-  min_size             = 2
+  min_size             = 1
   min_elb_capacity     = 2
 # launch_configuration = aws_launch_configuration.ec2_template.name
   health_check_grace_period = 500 // Time after instance comes into service before checking health.
