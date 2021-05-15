@@ -11,7 +11,7 @@ variable "app_subnets" {
 resource "aws_security_group" "alb-sec-group" {
   name = "alb-sec-group"
   description = "Security Group for the ELB (ALB)"
-dynamic "ingress" {
+  dynamic "ingress" {
     for_each = ["80", "443", "22", "8080"]
     content {
       from_port   = ingress.value
