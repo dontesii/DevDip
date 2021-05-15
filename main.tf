@@ -192,12 +192,13 @@ resource "aws_launch_template" "web" {
   image_id      = "ami-09e67e426f25ce0d7"
   instance_type = "t3.micro"
   key_name = "keyAWS"
-  user_data = <<-EOF
-            #!/bin/bash
-            sudo apt-get -y update
-            sudo apt-get -y install nginx
-            systemctl restart nginx
-            EOF
+  user_data = filebase64("${path.module}/user_data.sh")
+#   user_data = <<-EOF
+#             #!/bin/bash
+#             sudo apt-get -y update
+#             sudo apt-get -y install nginx
+#             systemctl restart nginx
+#             EOF
 
   disable_api_termination = true
   ebs_optimized = true
