@@ -28,7 +28,7 @@ resource "aws_security_group" "alb-sec-group" {
   }
 
   tags = {
-    Name  = "Dynamic SecurityGroup"
+    Name  = "alb SecurityGroup"
     Owner = "Admon"
   }
 }
@@ -54,6 +54,10 @@ resource "aws_security_group" "asg_sec_group" {
     protocol = "tcp"
     to_port = 80
     security_groups = [aws_security_group.alb-sec-group.id] // Allow Inbound traffic from the ALB Sec-Group
+  }
+  tags = {
+    Name  = "asg SecurityGroup"
+    Owner = "Admon"
   }
 }
 #--------------------------------------------------
