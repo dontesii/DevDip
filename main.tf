@@ -3,16 +3,16 @@ provider "aws" {
 }
 #--------------------------------------------------
 variable "app_subnets" { 
-    type = list(string) 
+    type        = list(string) 
     description = "App subnets id" 
-    default = ["subnet-5b00923d", "subnet-9d7954d0"]
+    default     = ["subnet-5b00923d", "subnet-9d7954d0"]
 } 
 #--------------------------------------------------
 resource "aws_security_group" "alb-sec-group" {
-  name = "alb-sec-group"
+  name        = "alb-sec-group"
   description = "Security Group for the ELB (ALB)"
   dynamic "ingress" {
-    for_each = ["80", "443", "22", "8080"]
+    for_each  = ["80", "443", "22", "8080"]
     content {
       from_port   = ingress.value
       to_port     = ingress.value
