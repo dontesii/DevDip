@@ -99,7 +99,7 @@ resource "aws_lb" "ELB" {
 #--------------------------------------------------
 resource "aws_lb_target_group" "asg" {
   name = "asg-example"
-  port = var.ec2_instance_port
+  port = 80
   protocol = "HTTP"
   target_type = "instance"
   vpc_id   = "vpc-aa7ed0d7"
@@ -107,15 +107,17 @@ resource "aws_lb_target_group" "asg" {
 #--------------------------------------------------
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.ELB.arn 
-  port = 80
-  protocol = "HTTP"
+  port              = 80
+  protocol          = "HTTP"
   default_action {
-    type = "fixed-response"
-    fixed_response {
-      content_type = "text/plain"
-      message_body = "404: page not found"
-      status_code  = 404
-    }
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.asg.arn
+#     type            = "fixed-response"
+#     fixed_response {
+#       content_type = "text/plain"
+#       message_body = "404: page not found"
+#       status_code  = 404
+    
   }
 }
 #--------------------------------------------------
