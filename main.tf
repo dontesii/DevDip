@@ -5,7 +5,7 @@ provider "aws" {
 variable "app_subnets" { 
     type        = list(string) 
     description = "App subnets id" 
-    default     = ["subnet-5b00923d", "subnet-9d7954d0"]
+    default     = ["subnet-5b00923d", "subnet-9d7954d0", "subnet-58fca856", "subnet-55891174", "subnet-fbb415ca", "subnet-53dc420c"]
 } 
 #--------------------------------------------------
 resource "aws_security_group" "alb-sec-group" {
@@ -59,7 +59,7 @@ data "aws_availability_zones" "available" {}
 #     Owner = "Admon"
 #   }
 # }
-#--------------------------------------------------
+# --------------------------------------------------
 # Create the ASG
  resource "aws_autoscaling_group" "Practice_ASG" {
   name                      = "ASG-${aws_launch_template.web.name}"
