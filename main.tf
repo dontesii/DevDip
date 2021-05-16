@@ -174,6 +174,23 @@ resource "aws_launch_template" "web" {
     
   }
 }
+
+#--------------------------------------------------
+data "aws_instances" "webserver_instans" {
+  instance_tags = {
+    Name = "WebServer"
+  }
+
+  filter {
+    name   = "tag:Name"
+    values = ["WebServer"]
+  }
+  depends_on = [aws_autoscaling_group.Practice_ASG]
+}
+
+output "aws_instans_public_ip" {
+    value = data.aws_instances.webserver_instans.public_ips
+}
 #--------------------------------------------------
 resource "aws_default_subnet" "default_az1" {
   availability_zone = data.aws_availability_zones.available.names[0]
