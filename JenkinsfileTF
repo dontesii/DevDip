@@ -25,7 +25,6 @@ pipeline {
     //            timestamps ()
     //            ansiColor('xterm')
     //        }
-   
     stages {
            stage('Notification on Slack Start') {
             steps {
@@ -34,19 +33,20 @@ pipeline {
                       "type": "section",
                       "text": [
                         "type": "mrkdwn",
-                        "text": "*Запущен процесс создания инфраструктуры*"
+                        "text": "*Поднимаем Инфраструктуру*"
                       ]
                     ],
                     [
                       "type": "section",
                       "text": [
                         "type": "mrkdwn",
-                        "text": "Создаем Load Balancer, Target Group, create Launch Template and ASG"
+                        "text": "This Job up Load Balancer, Target Group, create Launch Template and ASG"
                       ]
                      ]
                     ]
                }
              }
+             
           stage('Checkout SCM') {
             steps {
                 checkout([
