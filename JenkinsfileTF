@@ -100,7 +100,7 @@ pipeline {
     }
         stage('Notification on Slack Finish') {
             steps {
-                slackSend channel: '#testforevgen', message: 'Job Finish', blocks: [
+                slackSend channel: '#testadmon', message: 'Job Finish', blocks: [
                     [
                       "type": "section",
                       "text": [
