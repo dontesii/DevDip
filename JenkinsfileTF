@@ -25,7 +25,28 @@ pipeline {
     //            timestamps ()
     //            ansiColor('xterm')
     //        }
-    stages {
+   
+      stages {
+           stage('Notification on Slack Start') {
+            steps {
+                 slackSend channel: '#testforevgen', message: 'Job Start', blocks: [
+                    [
+                      "type": "section",
+                      "text": [
+                        "type": "mrkdwn",
+                        "text": "*Запущен процесс создания инфраструктуры*"
+                      ]
+                    ],
+                    [
+                      "type": "section",
+                      "text": [
+                        "type": "mrkdwn",
+                        "text": "Создаем Load Balancer, Target Group, create Launch Template and ASG"
+                      ]
+                     ]
+                    ]
+               }
+             }
           stage('Checkout SCM') {
             steps {
                 checkout([
@@ -87,6 +108,25 @@ pipeline {
                cleanWs()
      }
     }
+ stage('Notification on Slack Finish') {
+            steps {
+                slackSend channel: '#testforevgen', message: 'Job Finish', blocks: [
+                    [
+                      "type": "section",
+                      "text": [
+                        "type": "mrkdwn",
+                        "text": "*Инфраструктура создана*"
+                      ]
+                    ],
+                    [
+                      "type": "section",
+                      "text": [
+                        "type": "mrkdwn",
+                        "text": "Запуск Load Balancer, Target Group, create Launch Template and ASG"
+                      ] 
+                     ]
+                    ]
+               }
+             }
    }
   }
-
