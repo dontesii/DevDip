@@ -34,31 +34,31 @@ resource "aws_security_group" "alb-sec-group" {
 }
 #--------------------------------------------------
 data "aws_availability_zones" "available" {}
-#--------------------------------------------------
-# resource "aws_security_group" "asg_sec_group" {
-#   name = "asg_sec_group"
-#   description = "Security Group for the ASG"
-#   tags = {
-#     name = "name"
-#   }
-#   egress {
-#     from_port = 0
-#     protocol = "-1" // ALL Protocols
-#     to_port = 0
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
+--------------------------------------------------
+resource "aws_security_group" "asg_sec_group" {
+  name = "asg_sec_group"
+  description = "Security Group for the ASG"
+  tags = {
+    name = "name"
+  }
+  egress {
+    from_port = 0
+    protocol = "-1" // ALL Protocols
+    to_port = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-#   ingress {
-#     from_port = 80
-#     protocol = "tcp"
-#     to_port = 80
-#     security_groups = [aws_security_group.alb-sec-group.id]
-#   }
-#   tags = {
-#     Name  = "asg SecurityGroup"
-#     Owner = "Admon"
-#   }
-# }
+  ingress {
+    from_port = 80
+    protocol = "tcp"
+    to_port = 80
+    security_groups = [aws_security_group.alb-sec-group.id]
+  }
+  tags = {
+    Name  = "asg SecurityGroup"
+    Owner = "Admon"
+  }
+}
 # --------------------------------------------------
 # Create the ASG
  resource "aws_autoscaling_group" "Practice_ASG" {
