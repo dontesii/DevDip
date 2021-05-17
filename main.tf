@@ -38,9 +38,9 @@ data "aws_availability_zones" "available" {}
 resource "aws_security_group" "asg_sec_group" {
   name = "asg_sec_group"
   description = "Security Group for the ASG"
-  tags = {
-    name = "name"
-  }
+#   tags = {
+#     name = "name"
+#   }
   egress {
     from_port = 0
     protocol = "-1" // ALL Protocols
