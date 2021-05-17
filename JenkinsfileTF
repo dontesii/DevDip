@@ -29,7 +29,7 @@ pipeline {
       stages {
            stage('Notification on Slack Start') {
             steps {
-                 slackSend channel: '#testforevgen', message: 'Job Start', blocks: [
+                 slackSend channel: '#testadmon', message: 'Job Start', blocks: [
                     [
                       "type": "section",
                       "text": [
