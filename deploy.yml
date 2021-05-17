@@ -1,5 +1,5 @@
 ---
-- hosts: qa
+- hosts: tag_Owner_Admon
   become: true
   vars:
     create_containers: 1
