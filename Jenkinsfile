@@ -14,7 +14,7 @@ pipeline {
     stages {
       stage('Notification on Slack Start') {
             steps {
-                slackSend channel: '#testforevgen', message: 'Job Start', blocks: [
+                slackSend channel: '#testadmon', message: 'Job Start', blocks: [
                     [
                       "type": "section",
                       "text": [
@@ -54,7 +54,7 @@ pipeline {
         
           stage('Notification on Slack Comleted build/push image') {
             steps {
-                slackSend channel: '#testforevgen', message: 'Job processed', blocks: [
+                slackSend channel: '#testadmon', message: 'Job processed', blocks: [
                     [
                       "type": "section",
                       "text": [
@@ -74,7 +74,7 @@ pipeline {
              }
        stage('Notification on Slack start ec2.py and run Ansible-playbook') {
             steps {
-                slackSend channel: '#testforevgen', message: 'Job processed', blocks: [
+                slackSend channel: '#testadmon', message: 'Job processed', blocks: [
                     [
                       "type": "section",
                       "text": [
@@ -108,7 +108,7 @@ pipeline {
         
        stage('Notification on Slack finish Job') {
             steps {
-                slackSend channel: '#testforevgen', message: 'Job finish', blocks: [
+                slackSend channel: '#testadmon', message: 'Job finish', blocks: [
                     [
                       "type": "section",
                       "text": [
