@@ -34,7 +34,7 @@ resource "aws_security_group" "alb-sec-group" {
 }
 #--------------------------------------------------
 data "aws_availability_zones" "available" {}
---------------------------------------------------
+#--------------------------------------------------
 resource "aws_security_group" "asg_sec_group" {
   name = "asg_sec_group"
   description = "Security Group for the ASG"
