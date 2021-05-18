@@ -1,1 +1,1 @@
-![My Project diagrams](/projdiagrams.png)
+![My Project diagrams](/projectdiagrams.png)
