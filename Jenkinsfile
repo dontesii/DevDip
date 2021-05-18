@@ -19,14 +19,14 @@ pipeline {
                       "type": "section",
                       "text": [
                         "type": "mrkdwn",
-                        "text": "*Run configure*"
+                        "text": "*Configuration started*"
                       ]
                     ],
                     [
                       "type": "section",
                       "text": [
                         "type": "mrkdwn",
-                        "text": "Start Checkout SCM, Prepare build image"
+                        "text": "Start Checkout SCM and Prepare build image"
                       ]
                      ]
                     ]
@@ -59,14 +59,14 @@ pipeline {
                       "type": "section",
                       "text": [
                         "type": "mrkdwn",
-                        "text": "*Image pushed*"
+                        "text": "*Image is uploaded*"
                       ]
                     ],
                     [
                       "type": "section",
                       "text": [
                         "type": "mrkdwn",
-                        "text": "Image on DockerHub"
+                        "text": "Image on repositories DockerHub"
                       ]
                      ]
                     ]
@@ -79,14 +79,14 @@ pipeline {
                       "type": "section",
                       "text": [
                         "type": "mrkdwn",
-                        "text": "*start ec2.py and run Ansible-playbook*"
+                        "text": "*Start ec2.py and run Ansible-playbook*"
                       ]
                     ],
                     [
                       "type": "section",
                       "text": [
                         "type": "mrkdwn",
-                        "text": "Run dynamic inventory, generate file host for ansible playbook and run deploy"
+                        "text": "Run dynamic inventory, generate file host for ansible playbook and start deploy"
                       ]
                      ]
                     ]
@@ -113,14 +113,14 @@ pipeline {
                       "type": "section",
                       "text": [
                         "type": "mrkdwn",
-                        "text": "*Deploy completed*"
+                        "text": "*Deploy job is completed*"
                       ]
                     ],
                     [
                       "type": "section",
                       "text": [
                         "type": "mrkdwn",
-                        "text": "Finish"
+                        "text": "Job Finished"
                       ]
                      ]
                     ]
