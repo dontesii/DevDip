@@ -28,14 +28,14 @@ pipeline {
                       "type": "section",
                       "text": [
                         "type": "mrkdwn",
-                        "text": "*Поднимаем Инфраструктуру*"
+                        "text": "*Infrastructure deployment*"
                       ]
                     ],
                     [
                       "type": "section",
                       "text": [
                         "type": "mrkdwn",
-                        "text": "This Job up Load Balancer, Target Group, create Launch Template and ASG"
+                        "text": "Creature Load Balancer, Target Group, create Launch Template and Auto Scaling Groups"
                       ]
                      ]
                     ]
@@ -101,14 +101,14 @@ pipeline {
                       "type": "section",
                       "text": [
                         "type": "mrkdwn",
-                        "text": "*Подняли, какие молодцы*"
+                        "text": "*Infrastructure created*"
                       ]
                     ],
                     [
                       "type": "section",
                       "text": [
                         "type": "mrkdwn",
-                        "text": "Run Load Balancer, Target Group, create Launch Template and ASG ${env.var1}"
+                        "text": "Run Load Balancer, Target Group, create Launch Template and Auto Scaling Groups${env.var1}"
                       ] 
                      ]
                     ]
