@@ -59,7 +59,7 @@ pipeline {
                       "type": "section",
                       "text": [
                         "type": "mrkdwn",
-                        "text": "*Image is uploaded*"
+                        "text": "*Image is uploaded!*"
                       ]
                     ],
                     [
