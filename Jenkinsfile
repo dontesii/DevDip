@@ -54,7 +54,7 @@ pipeline {
         
           stage('Notification on Slack Comleted build/push image') {
             steps {
-                slackSend channel: '#testadmon', message: 'Job processed', blocks: [
+                slackSend channel: '#testadmon', message: '!Job processed', blocks: [
                     [
                       "type": "section",
                       "text": [
